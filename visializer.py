@@ -35,7 +35,7 @@ class Sorting_algorithms:
             ax=plt.axes()
             self.plot_design(ax)
             plt.bar(self.x,l,color=new_color_list)
-            plt.pause(0.1)
+            plt.pause(0.01)
             plt.clf()
         ax=plt.axes()
         self.plot_design(ax)
@@ -50,7 +50,7 @@ class Sorting_algorithms:
                 ax=plt.axes()
                 self.plot_design(ax)
                 plt.bar(self.x,l,color=new_color_list)
-                plt.pause(0.0001)
+                plt.pause(0.01)
                 plt.clf()
                 if l[j]>l[j+1]: l[j],l[j+1]=l[j+1],l[j]
         self.final(l)
@@ -65,7 +65,7 @@ class Sorting_algorithms:
                 ax=plt.axes()
                 self.plot_design(ax)
                 plt.bar(self.x,l,color=new_color_list)
-                plt.pause(0.1)
+                plt.pause(0.01)
                 plt.clf()
                 l[j+1]=l[j]
                 j-=1
@@ -81,7 +81,7 @@ class Sorting_algorithms:
                 ax=plt.axes()
                 self.plot_design(ax)
                 plt.bar(self.x,l,color=new_color_list)
-                plt.pause(0.1)
+                plt.pause(0.01)
                 plt.clf()
                 if l[j]<l[idx]:
                     idx=j
@@ -93,22 +93,22 @@ class Sorting_algorithms:
         temp[left],temp[right]="blue","blue"
         while(left<right):
             while(l[left]<=l[low] and left<high):
-                new_color_list=copy.deepcopy(temp)
                 left+=1
+                new_color_list=copy.deepcopy(temp)
                 new_color_list[left]="red"
                 ax=plt.axes()
                 self.plot_design(ax)
                 plt.bar(self.x,l,color=new_color_list)
-                plt.pause(0.1)
+                plt.pause(0.01)
                 plt.clf()
             while(l[right]>l[low] and right>low):
-                new_color_list=copy.deepcopy(temp )
                 right-=1
+                new_color_list=copy.deepcopy(temp)
                 new_color_list[right]="red"
                 ax=plt.axes()
                 self.plot_design(ax)
                 plt.bar(self.x,l,color=new_color_list)
-                plt.pause(0.1)
+                plt.pause(0.01)
                 plt.clf()
             if left<right: l[left],l[right]=l[right],l[left]
         l[low],l[right]=l[right],l[low]
@@ -123,9 +123,85 @@ class Sorting_algorithms:
             self.qs(l,low,pivot-1)
             self.qs(l,pivot+1,high)
     def merge_sort(self):
-        pass
+        self.ms(self.lst,0)
+        self.final(self.lst)
+        print(self.lst)
+    def ms(self,l,start):
+        if len(l)<=1: return 
+        mid=len(l)//2
+        left=l[:mid]
+        right=l[mid:]
+        self.ms(left,start)
+        self.ms(right,mid)
+        i,j,k=0,0,0
+        while i<len(left) and j<len(right):
+            if left[i]<right[j]:
+                l[k]=left[i]
+                self.lst[start+k]=left[i]
+                new_color_list=copy.deepcopy(self.color_list)
+                new_color_list[start+k]="red"
+                i+=1
+            else:
+                l[k]=right[j]
+                self.lst[start+k]=right[j]
+                new_color_list=copy.deepcopy(self.color_list)
+                new_color_list[start+k]="red"
+                j+=1
+            k+=1
+            ax=plt.axes()
+            self.plot_design(ax)
+            plt.bar(self.x,self.lst,color=new_color_list)
+            plt.pause(0.01)
+            plt.clf()
+        while i<len(left):
+            l[k]=left[i]
+            self.lst[start+k]=left[i]
+            new_color_list=copy.deepcopy(self.color_list)
+            new_color_list[start+k]="red"
+            ax=plt.axes()
+            self.plot_design(ax)
+            plt.bar(self.x,self.lst,color=new_color_list)
+            plt.pause(0.01)
+            plt.clf()
+            i+=1
+            k+=1
+        while j<len(right):
+            l[k]=right[j]
+            self.lst[start+k]=right[j]
+            new_color_list=copy.deepcopy(self.color_list)
+            new_color_list[start+k]="red"
+            ax=plt.axes()
+            self.plot_design(ax)
+            plt.bar(self.x,self.lst,color=new_color_list)
+            plt.pause(0.01)
+            plt.clf()
+            j+=1
+            k+=1
+    def count_sort(self,l,n,pos):
+        helper=[0]*10
+        ll=[0]*n
+        for i in range(n): helper[(l[i]//pos)%10]+=1
+        for i in range(1,10): helper[i]+=helper[i-1]
+        for i in range(n-1,-1,-1):
+            helper[(l[i]//pos)%10]-=1
+            ll[helper[(l[i]//pos)%10]]=l[i]
+        return ll
     def radix_sort(self):
-        pass
+        l=copy.deepcopy(self.lst)
+        maxi=max(l)
+        pos=1
+        while(maxi//pos>0):
+            for i in range(len(l)):
+                new_color_list=copy.deepcopy(self.color_list)
+                new_color_list[i]="red"
+                ax=plt.axes()
+                self.plot_design(ax)
+                plt.bar(self.x,l,color=new_color_list)
+                plt.pause(0.01)
+                plt.clf()
+            l=self.count_sort(l,len(l),pos)
+            pos*=10
+        self.final(l)
 class GUI:
     def __init__(self,SA):
         self.root=tk.Tk()
